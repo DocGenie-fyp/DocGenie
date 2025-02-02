@@ -1,0 +1,100 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.main-heading {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.sub-heading {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  margin-bottom: 2rem;
+}
+
+.error-message {
+  color: #e74c3c;
+  margin-bottom: 1rem;
+}
+
+.controls {
+  margin-bottom: 1.5rem;
+}
+
+.record-button, .stop-button, .upload-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.record-button:hover, .stop-button:hover, .upload-button:hover {
+  background-color: #2980b9;
+}
+
+.stop-button {
+  background-color: #e74c3c;
+}
+
+.stop-button:hover {
+  background-color: #c0392b;
+}
+
+.upload-section {
+  margin-bottom: 1.5rem;
+}
+
+.file-input {
+  margin-top: 0.5rem;
+}
+
+.audio-preview {
+  margin-bottom: 1.5rem;
+}
+
+.audio-player {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.upload-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.transcription-section {
+  margin-top: 1.5rem;
+}
+
+.transcription-text {
+  background: #ecf0f1;
+  padding: 1rem;
+  border-radius: 5px;
+  text-align: left;
+  white-space: pre-wrap;
+}
