@@ -1,11 +1,11 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
+from fastapi import FastAPI, File, UploadFile, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 import shutil
 import os
 import whisper
 import logging
-from typing import Optional
 from pydantic import BaseModel
+from utils.report_generator import generate_medical_report_with_gpt  # Make sure this exists
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -34,6 +34,7 @@ model = whisper.load_model("base")  # You can use "small", "medium", or "large" 
 class TranscriptionResponse(BaseModel):
     filename: str
     transcription: str
+    report: str  # Make sure to include the report in the response model
 
 @app.get("/")
 def read_root():
@@ -66,7 +67,7 @@ async def upload_audio(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/transcribe/", response_model=TranscriptionResponse)
-async def transcribe_audio(file: UploadFile = File(...)):
+async def transcribe_audio(file: UploadFile = File(...), role: str = Header(default="doctor")):
     try:
         # Validate file type
         if file.content_type not in ALLOWED_FILE_TYPES:
@@ -94,8 +95,16 @@ async def transcribe_audio(file: UploadFile = File(...)):
         result = model.transcribe(file_location)
         transcription = result["text"]
 
-        logger.info(f"Transcription completed for file: {file.filename}")
-        return {"filename": file.filename, "transcription": transcription}
+        # Generate a medical report using GPT
+        logger.info(f"Generating medical report for the transcription")
+        report = generate_medical_report_with_gpt(transcription, role)
+
+        logger.info(f"Transcription and report generation completed for file: {file.filename}")
+        return {
+            "filename": file.filename,
+            "transcription": transcription,
+            "report": report  # Include the generated report in the response
+        }
 
     except Exception as e:
         logger.error(f"Error transcribing file: {e}")

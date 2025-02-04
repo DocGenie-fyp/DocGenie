@@ -6,6 +6,7 @@ const AudioRecorder = () => {
   const [audioFile, setAudioFile] = useState(null);
   const [uploadFile, setUploadFile] = useState(null);
   const [transcription, setTranscription] = useState("");
+  const [report, setReport] = useState(""); 
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const mediaRecorderRef = useRef(null);
@@ -60,33 +61,28 @@ const AudioRecorder = () => {
     formData.append("file", uploadFile);
   
     try {
-      // Upload the audio file
-      const uploadResponse = await fetch("http://127.0.0.1:8000/upload/", {
+      // Upload the audio file and get the transcription + report
+      const response = await fetch("http://127.0.0.1:8000/transcribe/", {
         method: "POST",
         body: formData,
+        headers: {
+          "Role": "doctor",  // Pass the role dynamically if needed
+        },
       });
   
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json(); // Parse error response
-        throw new Error(errorData.detail || "Upload failed");
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Something went wrong.");
       }
   
-      console.log("Upload successful!");
+      const data = await response.json();
   
-      // Send the audio file for transcription
-      const transcribeResponse = await fetch("http://127.0.0.1:8000/transcribe/", {
-        method: "POST",
-        body: formData,
-      });
+      // Set the transcription and report in the state
+      setTranscription(data.transcription);
+      setReport(data.report);  // Ensure this line is present
+      console.log("Transcription:", data.transcription);
+      console.log("Report:", data.report);
   
-      if (!transcribeResponse.ok) {
-        const errorData = await transcribeResponse.json(); // Parse error response
-        throw new Error(errorData.detail || "Transcription failed");
-      }
-  
-      const transcribeData = await transcribeResponse.json();
-      setTranscription(transcribeData.transcription);
-      console.log("Transcription:", transcribeData.transcription);
     } catch (error) {
       console.error("Error:", error);
       setError(error.message || "Something went wrong. Please try again.");
@@ -145,8 +141,16 @@ const AudioRecorder = () => {
           <p className="transcription-text">{transcription}</p>
         </div>
       )}
-    </div>
+       {/* Generated Report */}
+      {report && (
+         <div>
+          <h3>Medical Report</h3>
+          <p>{report}</p>
+        </div>
+      )}
+  </div>
+
   );
 };
 
-export default AudioRecorder;
+export default AudioRecorder;   
