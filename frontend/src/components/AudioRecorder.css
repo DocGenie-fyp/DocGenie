@@ -7,20 +7,34 @@ body {
   padding: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
+  align-items: center; /* Keeps the container centered */
+  min-height: 100vh; /* Ensures full-page scrolling */
 }
 
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh; /* Ensures full-page scrolling */
+  padding: 20px; /* Adds spacing so it's not flush against the edges */
+  overflow-y: auto;
+}
+
+/* Ensures the container remains centered */
 .container {
   background: #fff;
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  max-width: 900px;
   width: 100%;
   text-align: center;
+  max-height: 90vh; /* Prevents it from taking the full screen height */
+  overflow-y: auto; /* Allows scrolling inside container if needed */
 }
 
+/* Headings */
 .main-heading {
   font-size: 2.5rem;
   color: #2c3e50;
@@ -29,15 +43,17 @@ body {
 
 .sub-heading {
   font-size: 1.2rem;
-  color: #7f8c8d;
+  color: #A9A9A9;
   margin-bottom: 2rem;
 }
 
+/* Error Messages */
 .error-message {
   color: #e74c3c;
   margin-bottom: 1rem;
 }
 
+/* Controls */
 .controls {
   margin-bottom: 1.5rem;
 }
@@ -65,12 +81,31 @@ body {
   background-color: #c0392b;
 }
 
+/* Upload Section */
 .upload-section {
   margin-bottom: 1.5rem;
 }
 
+/* Hide default file input */
 .file-input {
-  margin-top: 0.5rem;
+  display: none;
+}
+
+/* Custom file upload button */
+.file-upload-wrapper {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect */
+.file-upload-wrapper:hover {
+  background-color: #2980b9;
 }
 
 .audio-preview {
@@ -82,19 +117,77 @@ body {
   margin-top: 1rem;
 }
 
+/* Disabled Upload Button */
 .upload-button:disabled {
   background-color: #bdc3c7;
   cursor: not-allowed;
 }
 
-.transcription-section {
-  margin-top: 1.5rem;
+/* Transcription & Report Section */
+.transcription-section h3,
+.report-section h3 {
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 10px;
 }
 
-.transcription-text {
-  background: #ecf0f1;
-  padding: 1rem;
+/* Tabs Styling */
+.tabs-container {
+  margin-top: 20px;
+}
+
+/* Ensures full scrolling */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Tab Buttons */
+.tab-button {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+  border: none;
+  padding: 10px 15px;
   border-radius: 5px;
-  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tab-button.active {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+}
+
+.tab-button:hover {
+  background-color: #2980b9;
+  color: white;
+}
+
+/* Makes tab content scrollable */
+.tab-content {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #ecf0f1;
+  border-radius: 5px;
+  max-height: 400px; /* Ensures content doesn’t take the entire page */
+  overflow-y: auto; /* Allows scrolling inside tab */
+}
+
+/* Text Formatting */
+.transcription-text,
+.report-text {
   white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #2c3e50;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #bdc3c7;
+  text-align: left;
 }

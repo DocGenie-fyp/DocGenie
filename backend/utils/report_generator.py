@@ -32,22 +32,34 @@ def generate_medical_report_with_gpt(transcription, role="Specialized Health Ass
 
         {transcription}
 
-        Please generate a structured medical report including:
-        1. Patient symptoms.
-        2. Diagnosis.
-        3. Recommended treatment plan.
-        4. Follow-up instructions.
+         Please generate a structured medical report with the following sections. Ensure that patient information is presented in a point-by-point format:
+
+         1. **Patient Information** (Provide each detail separately as "Attribute: Value" format, e.g., "Sex: Male", "Blood Pressure: 130/88", etc.)
+         2. **Patient Symptoms**
+         3. **Diagnosis**
+         4. **Recommended Treatment Plan**
+         5. **Follow-up Instructions**
+
+        Format the report neatly using bullet points or numbering where appropriate.
+
+
+        **Strict Formatting Instructions:**  
+        - Ensure **proper line breaks** between sections.  
+        - Use **bold headings** and bullet points correctly.  
+        - Separate sections with **two blank lines** to improve readability.  
+        - Ensure a clean, **human-friendly format** that looks like a real report.  
+        - If any information is missing, use "N/A" as a placeholder.  
         """
 
         # Create the chat completion request
         response = client.chat.completions.create(
-            model="gpt-4",  # Ensure you are using the correct model
+            model="gpt-3.5-turbo",  # Ensure you are using the correct model
             messages=[
                 {"role": "system", "content": "You are a helpful medical assistant."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=500
+            max_tokens=800  # Increased token limit for better formatting
         )
 
         # Extract and return the generated report

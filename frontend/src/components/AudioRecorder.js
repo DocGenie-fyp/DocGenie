@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import "./AudioRecorder.css"; // Import CSS file for styling
 
 const AudioRecorder = () => {
@@ -9,6 +9,7 @@ const AudioRecorder = () => {
   const [report, setReport] = useState(""); 
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("transcription"); // State for tabs
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
 
@@ -61,12 +62,11 @@ const AudioRecorder = () => {
     formData.append("file", uploadFile);
   
     try {
-      // Upload the audio file and get the transcription + report
       const response = await fetch("http://127.0.0.1:8000/transcribe/", {
         method: "POST",
         body: formData,
         headers: {
-          "Role": "doctor",  // Pass the role dynamically if needed
+          "Role": "doctor",  
         },
       });
   
@@ -77,9 +77,8 @@ const AudioRecorder = () => {
   
       const data = await response.json();
   
-      // Set the transcription and report in the state
       setTranscription(data.transcription);
-      setReport(data.report);  // Ensure this line is present
+      setReport(data.report);  
       console.log("Transcription:", data.transcription);
       console.log("Report:", data.report);
   
@@ -122,7 +121,10 @@ const AudioRecorder = () => {
 
       <div className="upload-section">
         <h3>Or Upload Pre-recorded Audio</h3>
-        <input type="file" accept="audio/*" onChange={handleFileChange} className="file-input" />
+        <label className="file-upload-wrapper">
+          Choose File
+          <input type="file" accept="audio/*" onChange={handleFileChange} className="file-input" />
+        </label>
       </div>
 
       {audioFile && (
@@ -135,22 +137,42 @@ const AudioRecorder = () => {
         </div>
       )}
 
-      {transcription && (
-        <div className="transcription-section">
-          <h3>Transcription</h3>
-          <p className="transcription-text">{transcription}</p>
-        </div>
-      )}
-       {/* Generated Report */}
-      {report && (
-         <div>
-          <h3>Medical Report</h3>
-          <p>{report}</p>
-        </div>
-      )}
-  </div>
+      {transcription || report ? (
+        <div className="tabs-container">
+          <div className="tabs">
+            <button
+              className={`tab-button ${activeTab === "transcription" ? "active" : ""}`}
+              onClick={() => setActiveTab("transcription")}
+            >
+              Transcription
+            </button>
+            <button
+              className={`tab-button ${activeTab === "report" ? "active" : ""}`}
+              onClick={() => setActiveTab("report")}
+            >
+              Medical Report
+            </button>
+          </div>
 
+          <div className="tab-content">
+            {activeTab === "transcription" && transcription && (
+              <div className="transcription-section">
+                <h3>Transcription</h3>
+                <pre className="transcription-text">{transcription}</pre>
+              </div>
+            )}
+
+            {activeTab === "report" && report && (
+              <div className="report-section">
+                <h3>Medical Report</h3>
+                <pre className="report-text">{report}</pre>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 };
 
-export default AudioRecorder;   
+export default AudioRecorder;
